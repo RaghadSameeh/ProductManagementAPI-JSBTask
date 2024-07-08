@@ -20,10 +20,19 @@ namespace DataAccessLayer.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<order>()
+            //    .Property(o => o.OrderId)
+            //    .ValueGeneratedOnAdd()
+            //    .HasDefaultValueSql("NEWID()");
+
+            // Configure the relationship with cascade delete
             modelBuilder.Entity<order>()
-                .Property(o => o.OrderId)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("NEWID()");
+                .HasMany(o => o.Products)
+                .WithOne(p => p.order)
+                .HasForeignKey(p => p.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
         }
         public DbSet <product> products { get; set; }
         public DbSet <order> orders { get; set; }
